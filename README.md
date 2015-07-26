@@ -1,4 +1,4 @@
-# assline
+# asiline
 Convert command line dumps into formatted asciidoc passthroughs in a very noddy way
 
 Possibly the worst code I have ever written.
