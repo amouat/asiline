@@ -1,7 +1,12 @@
 import sys
 
+'''
+If you're reading this, be aware that this is *not* the correct way to solve
+problems like this. I just needed a quick and dirty hack. It will most probably
+come back to bite me.
 
-def ass(fname, type="docbook"):
+'''
+def asi(fname, type="docbook"):
 
     in_code = False
     in_cont = False
@@ -56,8 +61,8 @@ def ass(fname, type="docbook"):
                 print(line, end='')
 
     if in_code:
-        print("ERROR: unterminated asscode", file=sys.stderr)
+        print("ERROR: unterminated asicode", file=sys.stderr)
 
 
 if __name__ == "__main__":
-    ass(sys.argv[1])
+    asi(sys.argv[1])
