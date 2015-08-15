@@ -7,6 +7,13 @@ come back to bite me.
 
 '''
 
+'''
+TODO: handle annos
+      when not in code
+      check if line starts <x>
+      if it does, look up corresponding annotation and substitute
+      clear annos when hit code block
+'''
 
 
 def asi(fname, type="htmlbook"):
@@ -68,13 +75,14 @@ def asi(fname, type="htmlbook"):
                 if not in_code:
                     print("++++")
                     print(open_tag)
+                    annos.clear()
                     in_code = True
                     in_cont = False
                     continue
                 else:
                     print(close_tag)
                     print("++++")
-                    print_annos()
+                    #print_annos()
                     in_code = False
                     in_cont = False
                     continue
@@ -83,7 +91,7 @@ def asi(fname, type="htmlbook"):
             if in_code:
 
                 line = handle_annotation(line)
-
+                line = line.rstrip() + "\n"
                 if in_cont:
                     if line[-2:-1] == "\\":
                         print(line[:-1], anno(), sep='')
@@ -105,9 +113,14 @@ def asi(fname, type="htmlbook"):
                 print(line[:-1], anno(), sep='')
                 continue
 
+            else:
+                #normal line, just to make sure isn't annotation explanation
+                if line[0] == "<" and line[2] == ">":
+                    if line[1] in annos:
+                        print('<annotation ref="', line[1], '"/>', line[3:-1], sep='')
+                        continue
 
-            #normal line
-            print(line, end='')
+                print(line, end='')
 
     if in_code:
         print("ERROR: unterminated asicode", file=sys.stderr)
