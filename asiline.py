@@ -57,6 +57,7 @@ def asi(fname, type="htmlbook"):
         for an in annos:
             print("Annotation ", an)
 
+        annos.clear()
 
 
     with open(fname) as f:
