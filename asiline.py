@@ -53,6 +53,12 @@ def asi(fname, type="htmlbook"):
         return ""
 
 
+    def print_annos():
+        for an in annos:
+            print("Annotation ", an)
+
+
+
     with open(fname) as f:
         for line in f:
 
@@ -67,6 +73,7 @@ def asi(fname, type="htmlbook"):
                 else:
                     print(close_tag)
                     print("++++")
+                    print_annos()
                     in_code = False
                     in_cont = False
                     continue
