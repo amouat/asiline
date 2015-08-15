@@ -18,3 +18,13 @@ $ docker images --no-trunc | \
 nginx   latest  42a3cf88f...  2 weeks ago  132.8 MB
 debian  latest  41b730702...  2 weeks ago  125.1 MB
 ,,,,
+
+,,,,
+$ docker run -d --name real-redis-ambassador \
+             -p 6379:6379 \ <1>
+             --link real-redis:real-redis \ <2>
+             amouat/ambassador
+be613f5d1b49173b6b78b889290fd1d39dbb0fda4fbd74ee0ed26ab95ed7832c
+,,,,
+
+
