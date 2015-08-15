@@ -8,11 +8,9 @@ come back to bite me.
 '''
 
 '''
-TODO: handle annos
-      when not in code
-      check if line starts <x>
-      if it does, look up corresponding annotation and substitute
-      clear annos when hit code block
+TODO: proper html, may need to use dict and uuids
+      let user provide list of shell indicators
+      change continues to returns by creating function
 '''
 
 
@@ -34,6 +32,9 @@ def asi(fname, type="htmlbook"):
         in_open_tag = "<strong>"
         in_close_tag = "</strong>"
 
+    shell_indicators = set(["root@3baff51314d6:/data# ", "$ ",
+                            "docker@etcd-1:~$ ", "docker@consul-1:~$ ",
+                            "docker@overlay-1:~$ ", "docker@overlay-2:~$ "])
     cur_anno = ""
 
     annos = set([])
@@ -101,13 +102,19 @@ def asi(fname, type="htmlbook"):
                         in_cont = False
                         continue
 
-                if line[:2] == "$ ":
+
+                have_ind = ""
+                for ind in shell_indicators:
+                    if line.startswith(ind):
+                        have_ind = ind
+
+                if have_ind:
                     if line[-2:-1] == "\\":
-                        print("$ ", in_open_tag, line[2:-1], anno(), sep='')
+                        print(have_ind, in_open_tag, line[len(have_ind):-1], anno(), sep='')
                         in_cont = True
                         continue
                     else:
-                        print("$ ", in_open_tag, line[2:-1], in_close_tag, anno(), sep='')
+                        print(have_ind, in_open_tag, line[len(have_ind):-1], in_close_tag, anno(), sep='')
                         continue
 
                 print(line[:-1], anno(), sep='')
