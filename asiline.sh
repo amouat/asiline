@@ -7,7 +7,7 @@ if [[ $# == 1 ]]; then
   FILENAME=$(basename $1) 
   ABSFILE=$( cd $(dirname $1); pwd)/$FILENAME
   if [ -f "${ABSFILE}" ]; then
-    docker run -v $ABSFILE:/input.asiline amouat/asiline /input.asiline
+    docker run -v $ABSFILE:/$FILENAME amouat/asiline $FILENAME
   else
     echo "$1 is not a file"
   fi
