@@ -26,7 +26,7 @@ def asi(fname, type="htmlbook"):
     in_close_tag = "</userinput>"
 
     if type == "htmlbook":
-        open_tag = "<pre>"
+        open_tag = '<pre data-type="programlisting">'
         close_tag = "</pre>"
 
         in_open_tag = "<strong>"
@@ -54,7 +54,8 @@ def asi(fname, type="htmlbook"):
     def anno():
         nonlocal cur_anno
         if cur_anno:
-            ret = "<callout " + cur_anno + "\>"
+            # Also need to keep track of current input number and replace CO1. Sigh.
+            ret = '<a class="co" id="co_' + filename + '_CO1-' + cur_anno + '" href="#callout_' + filename + '_CO1-' + cur_anno + '><img src="callouts/' + cur_anno + '.png" alt="' + cur_anno + '"></a>'
             cur_anno = ""
             return ret
 
@@ -66,6 +67,10 @@ def asi(fname, type="htmlbook"):
             print("Annotation ", an)
 
         annos.clear()
+
+    def start_annos():
+        if annos.size > 0:
+            print('<dl class="calloutlist">')
 
 
     with open(fname) as f:
@@ -124,7 +129,17 @@ def asi(fname, type="htmlbook"):
                 #normal line, just to make sure isn't annotation explanation
                 if line[0] == "<" and line[2] == ">":
                     if line[1] in annos:
-                        print('<annotation ref="', line[1], '"/>', line[3:-1], sep='')
+
+                        an = line[1]
+
+                        if an > 1:
+                            print("</p></dd>")
+
+                        print('<dt><a class="co" id="callout_' + filename + '_CO1-' + an + '" href="#co_' + filename + '_CO1-' + an + '"><img src="callouts/' + an + '.png" alt="' + an + '"></a></dt>'
+                        print('<dd><p>', line[3:-1], sep='')
+
+                        if last_anno:
+                            print("</p></dd></dl>")
                         continue
 
                 print(line, end='')
