@@ -36,6 +36,8 @@ def asi(fname, type="htmlbook"):
                             "docker@etcd-1:~$ ", "docker@consul-1:~$ ",
                             "docker@overlay-1:~$ ", "docker@overlay-2:~$ "])
     cur_anno = ""
+    an_block = 0
+    last_anno=False
 
     annos = set([])
 
@@ -50,11 +52,16 @@ def asi(fname, type="htmlbook"):
 
         return line
 
+    #handles html entities in code
+    def handle_entities(line):
+
+        line = line.replace("&", "&gt;")
+        return line.replace("<", "&lt;")
+
     def anno():
         nonlocal cur_anno
         if cur_anno:
-            # Also need to keep track of current input number and replace CO1.
-            ret = ' <a class="co" id="co_' + sname + '_CO1-' + cur_anno + '" href="#callout_' + sname + '_CO1-' + cur_anno + '"><img src="callouts/' + cur_anno + '.png" alt="' + cur_anno + '"/></a>'
+            ret = ' <a class="co" id="co_' + sname + '_CO' + str(an_block) + '-' + cur_anno + '" href="#callout_' + sname + '_CO' + str(an_block) + '-' + cur_anno + '"><img src="callouts/' + cur_anno + '.png" alt="' + cur_anno + '"/></a>'
             cur_anno = ""
             return ret
 
@@ -77,6 +84,7 @@ def asi(fname, type="htmlbook"):
             #Check for opening/closing code
             if line[:4] == ",,,,":
                 if not in_code:
+                    an_block = an_block + 1
                     print("++++")
                     print(open_tag)
                     annos.clear()
@@ -96,6 +104,7 @@ def asi(fname, type="htmlbook"):
 
                 line = handle_annotation(line)
                 line = line.rstrip() + "\n"
+                line = handle_entities(line)
                 if in_cont:
                     if line[-2:-1] == "\\":
                         print(line[:-1], anno(), sep='')
@@ -126,6 +135,11 @@ def asi(fname, type="htmlbook"):
 
             else:
                 #normal line, just to make sure isn't annotation explanation
+                #print anno end at first blank line
+                if last_anno and not line.strip():
+                        last_anno=False
+                        print("pass:[</p></dd></dl>]")
+
                 if line[0] == "<" and line[2] == ">":
                     if line[1] in annos:
 
@@ -137,11 +151,11 @@ def asi(fname, type="htmlbook"):
                         if an > 1:
                             print("pass:[</p></dd>]")
 
-                        print('pass:[<dt><a class="co" id="callout_', sname, '_CO1-', an, '" href="#co_', sname, '_CO1-', an, '"><img src="callouts/', an, '.png" alt="', an, '"/></a></dt>]', sep='')
+                        print('pass:[<dt><a class="co" id="callout_', sname, '_CO' + str(an_block) + '-', an, '" href="#co_', sname, '_CO' + str(an_block) + '-', an, '"><img src="callouts/', an, '.png" alt="', an, '"/></a></dt>]', sep='')
                         print('pass:[<dd><p>]',  line[3:-1], sep='')
 
                         if an == len(annos):
-                            print("pass:[</p></dd></dl>]")
+                            last_anno=True
                         continue
 
                 print(line, end='')
