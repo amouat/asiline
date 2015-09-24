@@ -37,7 +37,7 @@ def asi(fname, type="htmlbook"):
                             "docker@overlay-1:~$ ", "docker@overlay-2:~$ ",
                             "docker@weave-identidock:~$ ", "docker@flannel-2:~$ ",
                             "root@calico-1:~# ", "docker@flannel-1:~$ ",
-                            "root@calico-2:~# ",
+                            "root@calico-2:~# ", "root@7e80c9731ea0:/# ",
                             "root@reginald:~# ", "docker@weave-redis:~$ "])
     cur_anno = ""
     an_block = 0
