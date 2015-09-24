@@ -34,7 +34,11 @@ def asi(fname, type="htmlbook"):
 
     shell_indicators = set(["root@3baff51314d6:/data# ", "$ ",
                             "docker@etcd-1:~$ ", "docker@consul-1:~$ ",
-                            "docker@overlay-1:~$ ", "docker@overlay-2:~$ "])
+                            "docker@overlay-1:~$ ", "docker@overlay-2:~$ ",
+                            "docker@weave-identidock:~$ ", "docker@flannel-2:~$ ",
+                            "root@calico-1:~# ", "docker@flannel-1:~$ ",
+                            "root@calico-2:~# ",
+                            "root@reginald:~# ", "docker@weave-redis:~$ "])
     cur_anno = ""
     an_block = 0
     last_anno=False
@@ -55,7 +59,7 @@ def asi(fname, type="htmlbook"):
     #handles html entities in code
     def handle_entities(line):
 
-        line = line.replace("&", "&gt;")
+        line = line.replace("&", "&amp;")
         return line.replace("<", "&lt;")
 
     def anno():
